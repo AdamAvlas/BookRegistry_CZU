@@ -1,0 +1,114 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using BookRegistry.Classes;
+using Microsoft.Data.SqlClient;
+
+namespace BookRegistry
+{
+    public class DatabaseHandler
+    {
+        public List<Book> Books = [];
+        public List<Author> Authors = [];
+        public List<Category> Categories = [];
+
+        private string connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+        //public List<Category> GetCategories()
+        //{
+        //    return Categories;
+        //}
+        public void Initialize()
+        {
+
+            using (SqlConnection sqlConnection = new(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                }
+                SqlCommand selectAuthorsCommand = new("SELECT TOP(100) author_id, first_name, last_name, birthdate FROM authors", sqlConnection);
+                SqlCommand selectCategoriesCommand = new("SELECT TOP(100) category_id, category_name FROM categories", sqlConnection);
+                SqlCommand selectBooksCommand = new("SELECT TOP(100) book_id, title, category_id, author_id FROM books", sqlConnection);
+
+                try
+                {
+                    SqlDataReader reader = selectAuthorsCommand.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Author newAuthor = new(int.Parse(reader["author_id"].ToString()), reader["first_name"].ToString(), reader["last_name"].ToString(), DateOnly.FromDateTime((DateTime)reader["birthdate"]));
+                        Authors.Add(newAuthor);
+                    }
+                    reader.Close();
+                    reader = selectCategoriesCommand.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Category newCategory = new(int.Parse(reader["category_id"].ToString()), reader["category_name"].ToString());
+                        Categories.Add(newCategory);
+                    }
+                    reader.Close();
+                    reader = selectBooksCommand.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        int authorId = int.Parse(reader["author_id"].ToString());
+                        int categoryId = int.Parse(reader["category_id"].ToString());
+                        Category bookCategory = Categories.Find(cat => cat.Id == categoryId);
+                        Author bookAuthor = Authors.Find(auth => auth.Id == authorId);
+
+                        Book newBook = new(int.Parse(reader["book_id"].ToString()), reader["title"].ToString(), bookCategory, bookAuthor);
+                        Books.Add(newBook);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while fetching data from database: {ex}, please contact your administrator, or check the log file for more information");
+                }
+
+                sqlConnection.Close();
+            }
+        }
+
+        public void CreateNewBook(Book book)
+        {
+            using (SqlConnection sqlConnection = new(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                }
+                string query = $"INSERT INTO books(title,category_id,author_id,date_added) VALUES('{book.Title}', {book.Category.Id}, {book.Author.Id}, GETDATE())";
+                SqlCommand insertBook = new(query, sqlConnection);
+
+                try
+                {
+                    if (insertBook.ExecuteNonQuery() > 0)
+                    {
+                        Console.WriteLine($"Succesfully created new book {book.Title}!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("The program ran into an issue while creating the new book###");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while inserting record into database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                }
+            }
+
+        }
+    }
+}
