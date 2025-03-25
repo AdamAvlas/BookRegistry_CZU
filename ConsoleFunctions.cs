@@ -9,37 +9,37 @@ namespace BookRegistry
 {
     public static class ConsoleFunctions
     {
-        public static void ViewAll(DatabaseHandler databaseHandler)
+        public static int UserInputCheck(string userInput)
         {
-            Console.Clear();
-            Console.WriteLine("Výpis všech dostupných knih: ");
-            foreach (Book book in databaseHandler.Books)
+            if (userInput.Length == 0)
             {
-                Console.WriteLine($"[{book.Id}]-[{book.Title}]-[{book.Author.GetFullName()}]-[{book.Category.Name}]");
+                Console.WriteLine("Nemůžeš zadat NIC!");
+                Console.ReadLine();
+                return 0;
             }
-            Console.WriteLine("\n Možnosti:\n(1) Návrat do menu\n(2) Upravit\n(3) Smazat");
-            Console.Write("Your choice: ");
-            Console.ReadLine();
 
-            bool endBlock = false;
-            while (!endBlock)
+            if (!Int32.TryParse(userInput, out int userInputInteger))
+            {
+                Console.WriteLine("Neplatná volba vole!");
+                Console.ReadLine();
+                return 0;
+            }
+
+            return userInputInteger;
+        }
+        public static void MainMenu(DatabaseHandler databaseHandler)
+        {
+            bool endProgram = false;
+            while (!endProgram)
             {
                 Console.Clear();
-                Console.WriteLine("(1) Return to menu\n(2) Edit book\n(3) Remove book");
+                Console.WriteLine("(1) View All\n(2) Create New\n(3) Edit existing\n(4) Exit program");
                 Console.Write("Your choice: ");
                 string consoleCommand = Console.ReadLine();
+                int consoleCommandInt = UserInputCheck(consoleCommand);
 
-                if (consoleCommand.Length == 0)
+                if (consoleCommandInt == 0)
                 {
-                    Console.WriteLine("Vole nemůžeš zadat NIC");
-                    Console.ReadLine();
-                    continue;
-                }
-
-                if (!Int32.TryParse(consoleCommand, out int consoleCommandInt))
-                {
-                    Console.WriteLine("Neplatná volba vole!");
-                    Console.ReadLine();
                     continue;
                 }
 
@@ -51,10 +51,54 @@ namespace BookRegistry
                         break;
 
                     case 2:
-                        Console.WriteLine("You have chosen option 1....bitch");
+                        Console.WriteLine("You have chosen option 1");
                         break;
 
                     case 4:
+                        Console.WriteLine("Exiting...");
+                        endProgram = true;
+                        break;
+
+                    default:
+                        Console.WriteLine("Neplatná/neexistující volba!");
+                        break;
+
+                }
+            }
+        }
+        public static void ViewAll(DatabaseHandler databaseHandler)
+        {
+            Console.Clear();
+            Console.WriteLine("Výpis všech dostupných knih: ");
+            foreach (Book book in databaseHandler.Books)
+            {
+                Console.WriteLine($"[{book.Id}]-[{book.Title}]-[{book.Author.GetFullName()}]-[{book.Category.Name}]");
+            }
+
+            bool endBlock = false;
+            while (!endBlock)
+            {
+                Console.WriteLine("\n(1) Edit book\n(2) Remove book\n(3) Return to main menu");
+                Console.Write("Your choice: ");
+                string consoleCommand = Console.ReadLine();
+                int consoleCommandInt = UserInputCheck(consoleCommand);
+                
+                if (consoleCommandInt == 0)
+                {
+                    continue;
+                }
+
+                switch (consoleCommandInt)
+                {
+                    case 1:
+                        Console.WriteLine("You have chosen option 1");
+                        break;
+
+                    case 2:
+                        Console.WriteLine("You have chosen option 2");
+                        break;
+
+                    case 3:
                         Console.WriteLine("Exiting...");
                         endBlock = true;
                         break;
