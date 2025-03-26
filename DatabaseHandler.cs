@@ -17,24 +17,30 @@ namespace BookRegistry
         public List<Category> Categories = [];
 
         private string connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+        
         //public List<Category> GetCategories()
         //{
         //    return Categories;
         //}
+
         public void Initialize()
         {
+            Books = [];
+            Authors = [];
+            Categories = [];
 
             using (SqlConnection sqlConnection = new(connectionString))
             {
                 try
                 {
                     sqlConnection.Open();
-
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                    Environment.Exit(1);
                 }
+
                 SqlCommand selectAuthorsCommand = new("SELECT TOP(100) author_id, first_name, last_name, birthdate FROM authors", sqlConnection);
                 SqlCommand selectCategoriesCommand = new("SELECT TOP(100) category_id, category_name FROM categories", sqlConnection);
                 SqlCommand selectBooksCommand = new("SELECT TOP(100) book_id, title, category_id, author_id FROM books", sqlConnection);
@@ -76,7 +82,46 @@ namespace BookRegistry
             }
         }
 
-        public void CreateNewBook(Book book)
+        public void Update()
+        {
+            Initialize();
+        }
+
+        public void InsertNewBook(Book newBook)//since all three methods are similar, maybe merge into one with a few input params?
+        {
+            using (SqlConnection sqlConnection = new(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                }
+                string query = $"INSERT INTO books(title,category_id,author_id,date_added) VALUES('{newBook.Title}', {newBook.Category.Id}, {newBook.Author.Id}, GETDATE())";
+                SqlCommand insertBook = new(query, sqlConnection);
+
+                try
+                {
+                    if (insertBook.ExecuteNonQuery() > 0)
+                    {
+                        Console.WriteLine($"Succesfully created new book {newBook.Title}!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("The program ran into an issue while creating the new book###");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while inserting record into database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                }
+            }
+            Update();
+        }
+
+        public void InsertNewAuthor(Author newAuthor)
         {
             using (SqlConnection sqlConnection = new(connectionString))
             {
@@ -89,18 +134,18 @@ namespace BookRegistry
                 {
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
                 }
-                string query = $"INSERT INTO books(title,category_id,author_id,date_added) VALUES('{book.Title}', {book.Category.Id}, {book.Author.Id}, GETDATE())";
+                string query = $"INSERT INTO authors(first_name,last_name,birthdate) VALUES('{newAuthor.Name}','{newAuthor.LastName}','{newAuthor.Birthdate.ToString("MM-dd-yyyy")}')";
                 SqlCommand insertBook = new(query, sqlConnection);
 
                 try
                 {
                     if (insertBook.ExecuteNonQuery() > 0)
                     {
-                        Console.WriteLine($"Succesfully created new book {book.Title}!");
+                        Console.WriteLine($"Succesfully created new author {newAuthor.GetFullName()}!");
                     }
                     else
                     {
-                        Console.WriteLine("The program ran into an issue while creating the new book###");
+                        Console.WriteLine("The program ran into an issue while creating the new author###");
                     }
                 }
                 catch (Exception ex)
@@ -108,7 +153,7 @@ namespace BookRegistry
                     Console.WriteLine($"Error while inserting record into database: {ex.Message}, please contact your administrator, or check the log file for more information");
                 }
             }
-
+            Update();
         }
     }
 }
