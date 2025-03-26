@@ -18,6 +18,7 @@ namespace BookRegistry
             }
             return false;
         }
+        
         public static bool UserInputCheck(string userInput, int minLength, int maxLength)
         {
             if (minLength > maxLength)
@@ -30,6 +31,7 @@ namespace BookRegistry
             }
             return false;
         }//reduntant?
+        
         public static int MenuInputCheck(string userInput)
         {
             if (userInput.Length == 0)
@@ -48,6 +50,7 @@ namespace BookRegistry
 
             return userInputInteger;
         }
+        
         public static void MainMenu(DatabaseHandler databaseHandler)
         {
             bool endProgram = false;
@@ -85,6 +88,7 @@ namespace BookRegistry
                 }
             }
         }
+        
         public static void ViewAll(DatabaseHandler databaseHandler)
         {
             Console.Clear();
