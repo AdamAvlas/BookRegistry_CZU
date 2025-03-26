@@ -18,6 +18,7 @@ namespace BookRegistry
             }
             return false;
         }
+
         public static bool UserInputCheck(string userInput, int minLength, int maxLength)
         {
             if (minLength > maxLength)
@@ -30,6 +31,7 @@ namespace BookRegistry
             }
             return false;
         }//reduntant?
+
         public static int MenuInputCheck(string userInput)
         {
             if (userInput.Length == 0)
@@ -48,6 +50,7 @@ namespace BookRegistry
 
             return userInputInteger;
         }
+
         public static void MainMenu(DatabaseHandler databaseHandler)
         {
             bool endProgram = false;
@@ -85,6 +88,7 @@ namespace BookRegistry
                 }
             }
         }
+
         public static void ViewAll(DatabaseHandler databaseHandler)
         {
             Console.Clear();
@@ -145,64 +149,78 @@ namespace BookRegistry
                     break;
                 }
             }
-            Console.WriteLine("\nChoose author/create new: ");
 
-            int i = 0;
-            foreach (Author author in databaseHandler.Authors)
+            Author newBookAuthor = null;
+            bool endAuthorBlock = true;
+            while (endAuthorBlock)
             {
-                Console.WriteLine($"({i + 1}) {author.GetFullName()} [{author.Id}]");
-                i++;
-            }
-            Console.WriteLine($"\n({0}) Create new");
+                Console.WriteLine("\nChoose author/create new: ");
 
-            int authorIDInteger;
-            Author newBookAuthor;
-            while (true)
-            {
-                Console.Write("Your choice: ");
-                string authorID = Console.ReadLine();
-                authorIDInteger = MenuInputCheck(authorID);
-
-                if (authorIDInteger > 0 && authorIDInteger <= i)
+                int i = 0;
+                foreach (Author author in databaseHandler.Authors)
                 {
-                    newBookAuthor = databaseHandler.Authors[authorIDInteger - 1];
-                    break;
+                    Console.WriteLine($"({i + 1}) {author.GetFullName()} [{author.Id}]");
+                    i++;
                 }
-                else if (authorIDInteger == 0)
-                {
-                    newBookAuthor = CreateNewAuthor(databaseHandler);
-                    break;
-                }
+                Console.WriteLine($"\n({0}) Create new");
 
+                int authorIDInteger;
+                while (true)
+                {
+                    Console.Write("Your choice: ");
+                    string authorID = Console.ReadLine();
+                    authorIDInteger = MenuInputCheck(authorID);
+
+                    if (authorIDInteger > 0 && authorIDInteger <= i)
+                    {
+                        newBookAuthor = databaseHandler.Authors[authorIDInteger - 1];
+                        endAuthorBlock = false;
+                        break;
+                    }
+                    else if (authorIDInteger == 0)
+                    {
+                        CreateNewAuthor(databaseHandler);
+                        break;
+                    }
+                }
             }
-            //Author newBookAuthor = databaseHandler.Authors[authorIDInteger - 1];
             Console.WriteLine($"Author chosen: {newBookAuthor.GetFullName()}");
+            //Author newBookAuthor = databaseHandler.Authors[authorIDInteger - 1];
 
-            //-----------------------------------------------------------------
+            //----------------------------------------------------------------------------------------------------------------------------------
 
-            Console.WriteLine("\nChoose category/create new: ");
-
-            int j = 0;
-            Console.WriteLine("av.cats.: " + databaseHandler.Categories.Count);//TEMP
-            foreach (Category category in databaseHandler.Categories)
+            Category newBookCategory = null;
+            bool endCategoryBlock = true;
+            while (endCategoryBlock)
             {
-                Console.WriteLine($"({j+1}) {category.Name} [{category.Id}]");
-                j++;
-            }
-            Console.WriteLine($"\n({0}) Create new");
+                Console.WriteLine("\nChoose category/create new: ");
 
-            int categoryIDInteger;
-            Category newBookCategory;
-            while (true)
-            {
-                Console.Write("Your choice: ");
-                string categoryID = Console.ReadLine();
-                categoryIDInteger = MenuInputCheck(categoryID);
-
-                if (categoryIDInteger > 0 && categoryIDInteger <= i)
+                int j = 0;
+                foreach (Category category in databaseHandler.Categories)
                 {
-                    newBookCategory = databaseHandler.Categories[categoryIDInteger - 1];
-                    break;
+                    Console.WriteLine($"({j + 1}) {category.Name} [{category.Id}]");
+                    j++;
+                }
+                Console.WriteLine($"\n({0}) Create new");
+
+                int categoryIDInteger;
+                while (true)
+                {
+                    Console.Write("Your choice: ");
+                    string categoryID = Console.ReadLine();
+                    categoryIDInteger = MenuInputCheck(categoryID);
+
+                    if (categoryIDInteger > 0 && categoryIDInteger <= j)
+                    {
+                        newBookCategory = databaseHandler.Categories[categoryIDInteger - 1];
+                        endCategoryBlock = false;
+                        break;
+                    }
+                    else if (categoryIDInteger == 0)
+                    {
+                        CreateNewCategory(databaseHandler);
+                        break;
+                    }
                 }
 
             }
@@ -215,7 +233,7 @@ namespace BookRegistry
                 if (choice == "Y" || choice == "y")
                 {
                     Console.WriteLine("Creating new book...");
-                    Book newBook = new(j, newBookTitle, newBookCategory, newBookAuthor);
+                    Book newBook = new(0, newBookTitle, newBookCategory, newBookAuthor);//maybe change constructor so that it doesnt need an id?
                     databaseHandler.InsertNewBook(newBook);
                     break;
                 }
@@ -230,7 +248,7 @@ namespace BookRegistry
             //databaseHandler.Update();
         }
 
-        public static Author CreateNewAuthor(DatabaseHandler databaseHandler)
+        public static void CreateNewAuthor(DatabaseHandler databaseHandler)
         {
             Console.WriteLine("Creating new author:");
             string newAuthorName;
@@ -274,13 +292,26 @@ namespace BookRegistry
             }
             Author newAuthor = new(0, newAuthorName, newAuthorLastName, newAuthorBirthdate);
             databaseHandler.InsertNewAuthor(newAuthor);
-
-            return newAuthor;
         }
 
         public static void CreateNewCategory(DatabaseHandler databaseHandler)
         {
+            Console.WriteLine("Creating new category:");
+            string newCategoryName;
+            while (true)
+            {
+                Console.Write("Enter category name/title: ");
+                newCategoryName = Console.ReadLine();
+                if (UserInputCheck(newCategoryName))
+                {
+                    break;
+                }
+            }
 
+            Category newCategory = new(0, newCategoryName);
+            databaseHandler.InsertNewCategory(newCategory);
+            //Author newAuthor = new(0, newAuthorName, newAuthorLastName, newAuthorBirthdate);
+            //databaseHandler.InsertNewAuthor(newAuthor);
         }
     }
 }

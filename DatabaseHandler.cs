@@ -16,8 +16,8 @@ namespace BookRegistry
         public List<Author> Authors = [];
         public List<Category> Categories = [];
 
-        private string connectionString = ConfigurationManager.AppSettings["ConnectionString"];
-        
+        private string connectionString = "";
+
         //public List<Category> GetCategories()
         //{
         //    return Categories;
@@ -29,6 +29,16 @@ namespace BookRegistry
             Authors = [];
             Categories = [];
 
+            try
+            {
+                connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while retrieving database connection details from configuration file: [{ex.Message}], please check the configuration file and try again");
+                Environment.Exit(2);
+            }
+
             using (SqlConnection sqlConnection = new(connectionString))
             {
                 try
@@ -37,7 +47,7 @@ namespace BookRegistry
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                    Console.WriteLine($"Error while connection to database: [{ex.Message}], please check the configuration file and try again");
                     Environment.Exit(1);
                 }
 
@@ -146,6 +156,41 @@ namespace BookRegistry
                     else
                     {
                         Console.WriteLine("The program ran into an issue while creating the new author###");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while inserting record into database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                }
+            }
+            Update();
+        }
+
+        public void InsertNewCategory(Category newCategory)
+        {
+            using (SqlConnection sqlConnection = new(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                }
+                string query = $"INSERT INTO categories(category_name) VALUES('{newCategory.Name}')";
+                SqlCommand insertBook = new(query, sqlConnection);
+
+                try
+                {
+                    if (insertBook.ExecuteNonQuery() > 0)
+                    {
+                        Console.WriteLine($"Succesfully created new category {newCategory.Name}!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("The program ran into an issue while creating the new category###");
                     }
                 }
                 catch (Exception ex)
