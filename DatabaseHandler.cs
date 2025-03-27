@@ -200,5 +200,15 @@ namespace BookRegistry
             }
             Update();
         }
+
+        public void UpdateBook(Book bookToEdit)
+        {
+
+        }
+
+        public void RemoveBook(Book bookToRemove)//change to int-id?
+        {
+
+        }
     }
 }
