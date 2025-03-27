@@ -51,7 +51,7 @@ namespace BookRegistry
             while (!endProgram)
             {
                 Console.Clear();
-                Console.WriteLine("(1) View All\n(2) Create New\n(3) Edit existing\n(4) Exit program");
+                Console.WriteLine("(1) View All\n(2) Create New\n(3) Edit existing\n(4) Remove existing\n(5) Exit program");
                 Console.Write("Your choice: ");
                 string consoleCommand = Console.ReadLine();
                 int consoleCommandInt = MenuInputCheck(consoleCommand);
@@ -72,6 +72,10 @@ namespace BookRegistry
                         break;
 
                     case 4:
+                        RemoveBook(databaseHandler);
+                        break;
+
+                    case 5:
                         Console.WriteLine("Exiting...");
                         endProgram = true;
                         break;
@@ -86,7 +90,7 @@ namespace BookRegistry
         public static void ViewAll(DatabaseHandler databaseHandler)
         {
             Console.Clear();
-            Console.WriteLine($"Výpis všech dostupných knih (count: {databaseHandler.Books.Count}): ");
+            Console.WriteLine($"Výpis všech dostupných knih: ");
             foreach (Book book in databaseHandler.Books)
             {
                 Console.WriteLine($"[{book.Id}]-[{book.Title}]-[{book.Author.GetFullName()}]-[{book.Category.Name}]");
@@ -306,6 +310,35 @@ namespace BookRegistry
             databaseHandler.InsertNewCategory(newCategory);
             //Author newAuthor = new(0, newAuthorName, newAuthorLastName, newAuthorBirthdate);
             //databaseHandler.InsertNewAuthor(newAuthor);
+        }
+
+        public static void RemoveBook(DatabaseHandler databaseHandler)
+        {
+            Console.Clear();
+            Console.WriteLine("Removing a book:");
+
+            foreach (Book book in databaseHandler.Books)
+            {
+                Console.WriteLine($"[{book.Id}]-[{book.Title}]-[{book.Author.GetFullName()}]-[{book.Category.Name}]");
+            }
+
+            int bookToRemoveID = 0;
+            while (true)
+            {
+                Console.Write("Choose book to remove: ");
+                string bookToRemoveStr = Console.ReadLine();//simplify maybe?
+                bookToRemoveID = MenuInputCheck(bookToRemoveStr);
+
+                if (bookToRemoveID > 0)
+                {
+                    break;
+                }
+
+
+            }
+            Book bookToRemove = databaseHandler.Books.Find(b => b.Id == bookToRemoveID);
+            Console.WriteLine($"You have chosen to remove book [{bookToRemove.Title}]");
+            Console.ReadLine();
         }
     }
 }
