@@ -233,6 +233,7 @@ namespace BookRegistry
                     Console.WriteLine("Creating new book...");
                     Book newBook = new(0, newBookTitle, newBookCategory, newBookAuthor);//maybe change constructor so that it doesnt need an id?
                     databaseHandler.InsertNewBook(newBook);
+                    Console.ReadLine();
                     break;
                 }
                 if (choice == "N" || choice == "n")
@@ -242,8 +243,6 @@ namespace BookRegistry
                     break;
                 }
             }
-
-            //databaseHandler.Update();
         }
 
         public static void CreateNewAuthor(DatabaseHandler databaseHandler)
@@ -323,6 +322,7 @@ namespace BookRegistry
             }
 
             int bookToRemoveID = 0;
+            Book bookToRemove;
             while (true)
             {
                 Console.Write("Choose book to remove: ");
@@ -331,14 +331,35 @@ namespace BookRegistry
 
                 if (bookToRemoveID > 0)
                 {
+                    bookToRemove = databaseHandler.Books.Find(b => b.Id == bookToRemoveID);
+                    if (bookToRemove == null)
+                    {
+                        Console.WriteLine($"No book with ID[{bookToRemoveID}] exists, please try again");
+                        continue;
+                    }
+
+                    Console.WriteLine($"You have chosen to remove book [{bookToRemove.Title}]");
                     break;
                 }
-
-
             }
-            Book bookToRemove = databaseHandler.Books.Find(b => b.Id == bookToRemoveID);
-            Console.WriteLine($"You have chosen to remove book [{bookToRemove.Title}]");
-            Console.ReadLine();
+            while (true)
+            {
+                Console.WriteLine("Confirm removal? [Y/N]: ");
+                string choice = Console.ReadLine();
+                if (choice == "Y" || choice == "y")
+                {
+                    Console.WriteLine("Removing book....");
+                    databaseHandler.RemoveBook(bookToRemove);
+                    Console.ReadLine();
+                    break;
+                }
+                if (choice == "N" || choice == "n")
+                {
+                    Console.WriteLine("Canceling the operation...");
+                    Console.ReadLine();
+                    break;
+                }
+            }
         }
     }
 }
