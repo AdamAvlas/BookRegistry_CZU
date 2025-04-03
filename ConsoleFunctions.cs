@@ -1,4 +1,5 @@
 ﻿using BookRegistry.Classes;
+using System.Text.RegularExpressions;
 
 namespace BookRegistry
 {
@@ -6,6 +7,7 @@ namespace BookRegistry
     {
         public static bool UserInputCheck(string userInput)
         {
+            //userInput = Regex.Replace(userInput, "[;`\"\"`\\^*\\[\\]=-`~{}()|]", String.Empty);
             if (userInput.Length > 0 && userInput.Length < 30)
             {
                 return true;
@@ -32,14 +34,14 @@ namespace BookRegistry
             {
                 Console.WriteLine("Cannot enter NOTHING!");
                 Console.ReadLine();
-                return 0;
+                return -1;
             }
 
             if (!Int32.TryParse(userInput, out int userInputInteger))
             {
                 Console.WriteLine("Invalid input!");
                 Console.ReadLine();
-                return 0;
+                return -1;
             }
 
             return userInputInteger;
@@ -69,6 +71,10 @@ namespace BookRegistry
 
                     case 2:
                         CreateNewBook(databaseHandler);
+                        break;
+
+                    case 3:
+                        UpdateBook(databaseHandler);
                         break;
 
                     case 4:
@@ -350,6 +356,146 @@ namespace BookRegistry
                 {
                     Console.WriteLine("Removing book....");
                     databaseHandler.RemoveBook(bookToRemove);
+                    Console.ReadLine();
+                    break;
+                }
+                if (choice == "N" || choice == "n")
+                {
+                    Console.WriteLine("Canceling the operation...");
+                    Console.ReadLine();
+                    break;
+                }
+            }
+        }
+
+        public static void UpdateBook(DatabaseHandler databaseHandler)
+        {
+            Console.Clear();
+            Console.WriteLine("Updating...");
+            foreach (Book book in databaseHandler.Books)
+            {
+                Console.WriteLine($"[{book.Id}]-[{book.Title}]-[{book.Author.GetFullName()}]-[{book.Category.Name}]");
+            }
+
+            int bookToUpdateID = 0;
+            Book bookToUpdate;
+
+            while (true)
+            {
+                Console.Write("Choose book to update: ");
+                string bookToRemoveStr = Console.ReadLine();//simplify maybe?
+                bookToUpdateID = MenuInputCheck(bookToRemoveStr);
+
+                if (bookToUpdateID > 0)
+                {
+                    bookToUpdate = databaseHandler.Books.Find(b => b.Id == bookToUpdateID);
+                    if (bookToUpdate == null)
+                    {
+                        Console.WriteLine($"No book with ID[{bookToUpdateID}] exists, please try again");
+                        continue;
+                    }
+
+                    Console.WriteLine($"You have chosen to update book [{bookToUpdate.Title}]");
+                    break;
+                }
+            }
+
+            string newBookTitle;
+            while (true)
+            {
+                Console.Write("Enter new title: ");
+                newBookTitle = Console.ReadLine();
+                if (UserInputCheck(newBookTitle))
+                {
+                    break;
+                }
+            }
+
+            Author newBookAuthor = null;
+            bool endAuthorBlock = true;
+            while (endAuthorBlock)
+            {
+                Console.WriteLine("\nChoose author/create new: ");
+
+                int i = 0;
+                foreach (Author author in databaseHandler.Authors)
+                {
+                    Console.WriteLine($"({i + 1}) {author.GetFullName()} [{author.Id}]");
+                    i++;
+                }
+                Console.WriteLine($"\n({0}) Create new");
+
+                int authorIDInteger;
+                while (true)
+                {
+                    Console.Write("Your choice: ");
+                    string authorID = Console.ReadLine();
+                    authorIDInteger = MenuInputCheck(authorID);
+
+                    if (authorIDInteger > 0 && authorIDInteger <= i)
+                    {
+                        newBookAuthor = databaseHandler.Authors[authorIDInteger - 1];
+                        endAuthorBlock = false;
+                        break;
+                    }
+                    else if (authorIDInteger == 0)
+                    {
+                        CreateNewAuthor(databaseHandler);
+                        break;
+                    }
+                }
+            }
+            Console.WriteLine($"New author chosen: {newBookAuthor.GetFullName()}");
+            //Author newBookAuthor = databaseHandler.Authors[authorIDInteger - 1];
+
+            //----------------------------------------------------------------------------------------------------------------------------------
+
+            Category newBookCategory = null;
+            bool endCategoryBlock = true;
+            while (endCategoryBlock)
+            {
+                Console.WriteLine("\nChoose category/create new: ");
+
+                int j = 0;
+                foreach (Category category in databaseHandler.Categories)
+                {
+                    Console.WriteLine($"({j + 1}) {category.Name} [{category.Id}]");
+                    j++;
+                }
+                Console.WriteLine($"\n({0}) Create new");
+
+                int categoryIDInteger;
+                while (true)
+                {
+                    Console.Write("Your choice: ");
+                    string categoryID = Console.ReadLine();
+                    categoryIDInteger = MenuInputCheck(categoryID);
+
+                    if (categoryIDInteger > 0 && categoryIDInteger <= j)
+                    {
+                        newBookCategory = databaseHandler.Categories[categoryIDInteger - 1];
+                        endCategoryBlock = false;
+                        break;
+                    }
+                    else if (categoryIDInteger == 0)
+                    {
+                        CreateNewCategory(databaseHandler);
+                        break;
+                    }
+                }
+
+            }
+            Console.WriteLine($"New category chosen: {newBookCategory.Name}");
+
+            while (true)
+            {
+                Console.WriteLine("Confirm changes? [Y/N]: ");
+                string choice = Console.ReadLine();
+                if (choice == "Y" || choice == "y")
+                {
+                    Console.WriteLine("Updating book...");
+                    Book newBook = new(0, newBookTitle, newBookCategory, newBookAuthor);//maybe change constructor so that it doesnt need an id?
+                    databaseHandler.UpdateBook(bookToUpdate, newBook);
                     Console.ReadLine();
                     break;
                 }
