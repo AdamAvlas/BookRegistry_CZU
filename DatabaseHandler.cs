@@ -208,7 +208,36 @@ namespace BookRegistry
 
         public void RemoveBook(Book bookToRemove)//change to int-id?
         {
+            using (SqlConnection sqlConnection = new(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                }
+                string query = $"DELETE FROM books WHERE book_id = {bookToRemove.Id}";
+                SqlCommand insertBook = new(query, sqlConnection);
 
+                try
+                {
+                    if (insertBook.ExecuteNonQuery() > 0)
+                    {
+                        Console.WriteLine($"Succesfully removed book [{bookToRemove.Title}]!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("The program ran into an issue while removing the book###");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while removing record from database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                }
+            }
+            Update();
         }
     }
 }
