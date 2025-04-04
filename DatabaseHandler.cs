@@ -16,12 +16,7 @@ namespace BookRegistry
         public List<Author> Authors = [];
         public List<Category> Categories = [];
 
-        private string connectionString = "";
-
-        //public List<Category> GetCategories()
-        //{
-        //    return Categories;
-        //}
+        private string connectionString;
 
         public void Initialize()
         {
@@ -204,7 +199,7 @@ namespace BookRegistry
             Update();
         }
 
-        public void EditBook(Book bookToEdit, Book newBook)
+        public void UpdateBook(Book bookToEdit, Book newBook)
         {
             using (SqlConnection sqlConnection = new(connectionString))
             {
@@ -217,20 +212,24 @@ namespace BookRegistry
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
                 }
 
-                SqlCommand insertBook = new("UPDATE books SET title = 'UPDATED', category_id = 3, author_id = 12 WHERE book_id = 19", sqlConnection);
-                insertBook.Parameters.Add(new SqlParameter("Title", newBook.Title));
-                insertBook.Parameters.Add(new SqlParameter("CategoryID", newBook.Category.Id));
-                insertBook.Parameters.Add(new SqlParameter("AuthorID", newBook.Author.Id));
+                SqlCommand insertBook = new("UPDATE books SET title = @Title, category_id = @CategoryID, author_id = @AuthorID WHERE book_id = @BookToEditID", sqlConnection);
+                insertBook.Parameters.AddRange(
+                [
+                    new SqlParameter("@Title", newBook.Title),
+                    new SqlParameter("@CategoryID", newBook.Category.Id),
+                    new SqlParameter("@AuthorID", newBook.Author.Id),
+                    new SqlParameter("@BookToEditID", bookToEdit.Id)
+                ]);
 
                 try
                 {
                     if (insertBook.ExecuteNonQuery() > 0)
                     {
-                        Console.WriteLine($"Succesfully created new book {newBook.Title}!");
+                        Console.WriteLine($"Succesfully updated book [{bookToEdit.Title}] to book [{newBook.Title}]!");
                     }
                     else
                     {
-                        Console.WriteLine("The program ran into an issue while creating the new book###");
+                        Console.WriteLine("The program ran into an issue while updating the new book###");
                     }
                 }
                 catch (Exception ex)
@@ -241,7 +240,7 @@ namespace BookRegistry
             Update();
         }
 
-        public void RemoveBook(Book bookToRemove)//change to int-id?
+        public void DeleteBook(Book bookToRemove)//change to int-id?
         {
             using (SqlConnection sqlConnection = new(connectionString))
             {
