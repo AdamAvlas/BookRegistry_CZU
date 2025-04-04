@@ -109,8 +109,11 @@ namespace BookRegistry
                 {
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
                 }
-                string query = $"INSERT INTO books(title,category_id,author_id,date_added) VALUES('{newBook.Title}', {newBook.Category.Id}, {newBook.Author.Id}, GETDATE())";
-                SqlCommand insertBook = new(query, sqlConnection);
+
+                SqlCommand insertBook = new("INSERT INTO books(title,category_id,author_id,date_added) VALUES(@Title, @CategoryID, @AuthorID, GETDATE())", sqlConnection);
+                insertBook.Parameters.Add(new SqlParameter("Title", newBook.Title));
+                insertBook.Parameters.Add(new SqlParameter("CategoryID", newBook.Category.Id));
+                insertBook.Parameters.Add(new SqlParameter("AuthorID", newBook.Author.Id));
 
                 try
                 {
@@ -201,9 +204,41 @@ namespace BookRegistry
             Update();
         }
 
-        public void UpdateBook(Book bookToEdit)
+        public void UpdateBook(Book bookToEdit, Book newBook)
         {
+            using (SqlConnection sqlConnection = new(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                }
 
+                SqlCommand insertBook = new("UPDATE books SET title = 'UPDATED', category_id = 3, author_id = 12 WHERE book_id = 19", sqlConnection);
+                insertBook.Parameters.Add(new SqlParameter("Title", newBook.Title));
+                insertBook.Parameters.Add(new SqlParameter("CategoryID", newBook.Category.Id));
+                insertBook.Parameters.Add(new SqlParameter("AuthorID", newBook.Author.Id));
+
+                try
+                {
+                    if (insertBook.ExecuteNonQuery() > 0)
+                    {
+                        Console.WriteLine($"Succesfully created new book {newBook.Title}!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("The program ran into an issue while creating the new book###");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while inserting record into database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                }
+            }
+            Update();
         }
 
         public void RemoveBook(Book bookToRemove)//change to int-id?
