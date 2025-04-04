@@ -74,7 +74,7 @@ namespace BookRegistry
                         break;
 
                     case 3:
-                        UpdateBook(databaseHandler);
+                        EditBook(databaseHandler);
                         break;
 
                     case 4:
@@ -355,7 +355,7 @@ namespace BookRegistry
                 if (choice == "Y" || choice == "y")
                 {
                     Console.WriteLine("Removing book....");
-                    databaseHandler.RemoveBook(bookToRemove);
+                    databaseHandler.DeleteBook(bookToRemove);
                     Console.ReadLine();
                     break;
                 }
@@ -368,7 +368,7 @@ namespace BookRegistry
             }
         }
 
-        public static void UpdateBook(DatabaseHandler databaseHandler)
+        public static void EditBook(DatabaseHandler databaseHandler)
         {
             Console.Clear();
             Console.WriteLine("Updating...");
@@ -495,7 +495,7 @@ namespace BookRegistry
                 {
                     Console.WriteLine("Updating book...");
                     Book newBook = new(0, newBookTitle, newBookCategory, newBookAuthor);//maybe change constructor so that it doesnt need an id?
-                    databaseHandler.EditBook(bookToUpdate, newBook);
+                    databaseHandler.UpdateBook(bookToUpdate, newBook);
                     Console.ReadLine();
                     break;
                 }
