@@ -204,7 +204,7 @@ namespace BookRegistry
             Update();
         }
 
-        public void UpdateBook(Book bookToEdit, Book newBook)
+        public void EditBook(Book bookToEdit, Book newBook)
         {
             using (SqlConnection sqlConnection = new(connectionString))
             {

@@ -495,7 +495,7 @@ namespace BookRegistry
                 {
                     Console.WriteLine("Updating book...");
                     Book newBook = new(0, newBookTitle, newBookCategory, newBookAuthor);//maybe change constructor so that it doesnt need an id?
-                    databaseHandler.UpdateBook(bookToUpdate, newBook);
+                    databaseHandler.EditBook(bookToUpdate, newBook);
                     Console.ReadLine();
                     break;
                 }
