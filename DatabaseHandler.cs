@@ -16,12 +16,7 @@ namespace BookRegistry
         public List<Author> Authors = [];
         public List<Category> Categories = [];
 
-        private string connectionString = "";
-
-        //public List<Category> GetCategories()
-        //{
-        //    return Categories;
-        //}
+        private string connectionString;
 
         public void Initialize()
         {
@@ -109,8 +104,11 @@ namespace BookRegistry
                 {
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
                 }
-                string query = $"INSERT INTO books(title,category_id,author_id,date_added) VALUES('{newBook.Title}', {newBook.Category.Id}, {newBook.Author.Id}, GETDATE())";
-                SqlCommand insertBook = new(query, sqlConnection);
+
+                SqlCommand insertBook = new("INSERT INTO books(title,category_id,author_id,date_added) VALUES(@Title, @CategoryID, @AuthorID, GETDATE())", sqlConnection);
+                insertBook.Parameters.Add(new SqlParameter("Title", newBook.Title));
+                insertBook.Parameters.Add(new SqlParameter("CategoryID", newBook.Category.Id));
+                insertBook.Parameters.Add(new SqlParameter("AuthorID", newBook.Author.Id));
 
                 try
                 {
@@ -196,6 +194,81 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while inserting record into database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                }
+            }
+            Update();
+        }
+
+        public void UpdateBook(Book bookToEdit, Book newBook)
+        {
+            using (SqlConnection sqlConnection = new(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                }
+
+                SqlCommand insertBook = new("UPDATE books SET title = @Title, category_id = @CategoryID, author_id = @AuthorID WHERE book_id = @BookToEditID", sqlConnection);
+                insertBook.Parameters.AddRange(
+                [
+                    new SqlParameter("@Title", newBook.Title),
+                    new SqlParameter("@CategoryID", newBook.Category.Id),
+                    new SqlParameter("@AuthorID", newBook.Author.Id),
+                    new SqlParameter("@BookToEditID", bookToEdit.Id)
+                ]);
+
+                try
+                {
+                    if (insertBook.ExecuteNonQuery() > 0)
+                    {
+                        Console.WriteLine($"Succesfully updated book [{bookToEdit.Title}] to book [{newBook.Title}]!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("The program ran into an issue while updating the new book###");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while inserting record into database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                }
+            }
+            Update();
+        }
+
+        public void DeleteBook(Book bookToRemove)//change to int-id?
+        {
+            using (SqlConnection sqlConnection = new(connectionString))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                }
+                string query = $"DELETE FROM books WHERE book_id = {bookToRemove.Id}";
+                SqlCommand insertBook = new(query, sqlConnection);
+
+                try
+                {
+                    if (insertBook.ExecuteNonQuery() > 0)
+                    {
+                        Console.WriteLine($"Succesfully removed book [{bookToRemove.Title}]!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("The program ran into an issue while removing the book###");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error while removing record from database: {ex.Message}, please contact your administrator, or check the log file for more information");
                 }
             }
             Update();
