@@ -26,16 +26,21 @@ namespace BookRegistry
             }
 
             int noFiles = Directory.GetFiles(logDirectoryPath).Length;
-            if (noFiles >= 3 && !File.Exists(logFilePath))
+            if ((noFiles == 3 && !File.Exists(logFilePath)) || (noFiles > 3))
             {
-                Dictionary<string, DateTime> keyValuePairs = new Dictionary<string, DateTime>();
+                Dictionary<string, DateTime> filesDict = [];
 
                 foreach (string file in Directory.GetFiles(logDirectoryPath))
                 {
-                    keyValuePairs.Add(file, File.GetLastWriteTime(file));
+                    filesDict.Add(file, File.GetLastWriteTime(file));
                 }
-                keyValuePairs = (Dictionary<string, DateTime>)keyValuePairs.OrderBy(keyValue => keyValue.Value);
+                var filesDictSorted = filesDict.OrderByDescending(pair => pair.Value);
+                foreach (KeyValuePair<string,DateTime> item in filesDictSorted)
+                {
+                    Console.WriteLine($"key: {item.Key} - value: {item.Value}");
+                }
 
+                Console.WriteLine("Oldest file?: " + filesDictSorted.ElementAt(0).Key);
             }
 
             Console.WriteLine($"Logging error to: {logFilePath}");
