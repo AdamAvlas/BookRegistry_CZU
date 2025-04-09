@@ -5,14 +5,14 @@ namespace BookRegistry
 {
     public static class ConsoleFunctions//TO-DO: make non-static + rename maybe?
     {
-        public static bool UserInputCheck(string userInput)
+        public static string UserInputCheck(string userInput)
         {
-            //userInput = Regex.Replace(userInput, "[;`\"\"`\\^*\\[\\]=-`~{}()|]", String.Empty);
+            userInput = Regex.Replace(userInput, "[;`\"\"`\\^*\\[\\]=-`~{}()|]", String.Empty);
             if (userInput.Length > 0 && userInput.Length < 30)
             {
-                return true;
+                return userInput;
             }
-            return false;
+            return "";
         }
 
         public static bool UserInputCheck(string userInput, int minLength, int maxLength)
@@ -147,8 +147,8 @@ namespace BookRegistry
             while (true)
             {
                 Console.Write("Enter title: ");
-                newBookTitle = Console.ReadLine();
-                if (UserInputCheck(newBookTitle))
+                newBookTitle = UserInputCheck(Console.ReadLine());
+                if (UserInputCheck(newBookTitle).Length > 0)
                 {
                     break;
                 }
@@ -258,8 +258,8 @@ namespace BookRegistry
             while (true)
             {
                 Console.Write("Enter first name: ");
-                newAuthorName = Console.ReadLine();
-                if (UserInputCheck(newAuthorName))
+                newAuthorName = UserInputCheck(Console.ReadLine());
+                if (UserInputCheck(newAuthorName).Length > 0)
                 {
                     break;
                 }
@@ -268,8 +268,8 @@ namespace BookRegistry
             while (true)
             {
                 Console.Write("Enter last name: ");
-                newAuthorLastName = Console.ReadLine();
-                if (UserInputCheck(newAuthorLastName))
+                newAuthorLastName = UserInputCheck(Console.ReadLine());
+                if (UserInputCheck(newAuthorName).Length > 0)
                 {
                     break;
                 }
@@ -304,8 +304,8 @@ namespace BookRegistry
             while (true)
             {
                 Console.Write("Enter category name/title: ");
-                newCategoryName = Console.ReadLine();
-                if (UserInputCheck(newCategoryName))
+                newCategoryName = UserInputCheck(Console.ReadLine());
+                if (UserInputCheck(newCategoryName).Length > 0)
                 {
                     break;
                 }
@@ -403,9 +403,9 @@ namespace BookRegistry
             string newBookTitle;
             while (true)
             {
-                Console.Write("Enter new title: ");
-                newBookTitle = Console.ReadLine();
-                if (UserInputCheck(newBookTitle))
+                Console.Write("Enter new title name: ");
+                newBookTitle = UserInputCheck(Console.ReadLine());
+                if (UserInputCheck(newBookTitle).Length > 0)
                 {
                     break;
                 }
