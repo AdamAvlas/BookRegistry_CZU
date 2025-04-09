@@ -142,6 +142,7 @@ namespace BookRegistry
                     break;
                 }
             }
+            Console.WriteLine($"Chosen title: {newBookTitle}");
 
             Author newBookAuthor = null;
             bool endAuthorBlock = true;
@@ -394,6 +395,7 @@ namespace BookRegistry
                     break;
                 }
             }
+            Console.WriteLine($"New title chosen: {newBookTitle}");
 
             Author newBookAuthor = null;
             bool endAuthorBlock = true;
