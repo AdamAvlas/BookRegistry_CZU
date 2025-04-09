@@ -5,10 +5,10 @@ namespace BookRegistry
 {
     public static class ConsoleFunctions//TO-DO: make non-static + rename maybe?
     {
-        public static string UserInputCheck(string userInput)
+        private static string UserInputCheck(string userInput)
         {
             int maxLength = 40;
-            string regexPattern = @"[^a-zA-Z0-9!""()?.,$#@%:ěščřžýáíéúůďťňĚŠČŘŽÝÁÍÉŮÚĎŤŇ]";
+            string regexPattern = @"[^a-zA-Z0-9!""()?.,$#@%:ěščřžýáíéúůďťňĚŠČŘŽÝÁÍÉŮÚĎŤŇ ]";
             userInput = userInput.Trim();
             userInput = Regex.Replace(userInput, regexPattern, String.Empty);
             if (userInput.Length > 0 && userInput.Length < maxLength)
@@ -19,7 +19,7 @@ namespace BookRegistry
             return "";
         }
 
-        public static int MenuInputCheck(string userInput)
+        private static int MenuInputCheck(string userInput)
         {
             if (userInput.Length == 0)
             {
@@ -84,7 +84,7 @@ namespace BookRegistry
             }
         }
 
-        public static void ViewAll(DatabaseHandler databaseHandler)
+        private static void ViewAll(DatabaseHandler databaseHandler)
         {
             Console.Clear();
             Console.WriteLine($"Výpis všech dostupných knih: ");
@@ -98,7 +98,7 @@ namespace BookRegistry
             Console.ReadLine();
         }
 
-        public static void CreateNewBook(DatabaseHandler databaseHandler)
+        private static void CreateNewBook(DatabaseHandler databaseHandler)
         {
             Console.Clear();
             Console.WriteLine("Creating new book:");
@@ -208,7 +208,7 @@ namespace BookRegistry
             }
         }
 
-        public static void CreateNewAuthor(DatabaseHandler databaseHandler)
+        private static void CreateNewAuthor(DatabaseHandler databaseHandler)
         {
             Console.WriteLine("Creating new author:");
             string newAuthorName;
@@ -254,7 +254,7 @@ namespace BookRegistry
             databaseHandler.InsertNewAuthor(newAuthor);
         }
 
-        public static void CreateNewCategory(DatabaseHandler databaseHandler)
+        private static void CreateNewCategory(DatabaseHandler databaseHandler)
         {
             Console.WriteLine("Creating new category:");
             string newCategoryName;
@@ -272,7 +272,7 @@ namespace BookRegistry
             databaseHandler.InsertNewCategory(newCategory);
         }
 
-        public static void RemoveBook(DatabaseHandler databaseHandler)
+        private static void RemoveBook(DatabaseHandler databaseHandler)
         {
             Console.Clear();
             Console.WriteLine("Removing a book:");
@@ -323,7 +323,7 @@ namespace BookRegistry
             }
         }
 
-        public static void EditBook(DatabaseHandler databaseHandler)
+        private static void EditBook(DatabaseHandler databaseHandler)
         {
             Console.Clear();
             Console.WriteLine("Updating...");
