@@ -7,7 +7,9 @@ namespace BookRegistry
     {
         public static string UserInputCheck(string userInput)
         {
-            userInput = Regex.Replace(userInput, "[;`\"\"`\\^*\\[\\]=-`~{}()|]", String.Empty);
+            string regexPattern = @"[^a-zA-Z0-9!""()?.,$#@%:ěščřžýáíéúůďťňĚŠČŘŽÝÁÍÉŮÚĎŤŇ]";
+            userInput = userInput.Trim();
+            userInput = Regex.Replace(userInput, regexPattern, String.Empty);
             if (userInput.Length > 0 && userInput.Length < 30)
             {
                 return userInput;
@@ -365,7 +367,7 @@ namespace BookRegistry
             while (true)
             {
                 Console.Write("Choose book to update: ");
-                string bookToRemoveStr = Console.ReadLine();//simplify maybe?
+                string bookToRemoveStr = Console.ReadLine();
                 bookToUpdateID = MenuInputCheck(bookToRemoveStr);
 
                 if (bookToUpdateID > 0)
@@ -428,9 +430,6 @@ namespace BookRegistry
                 }
             }
             Console.WriteLine($"New author chosen: {newBookAuthor.GetFullName()}");
-            //Author newBookAuthor = databaseHandler.Authors[authorIDInteger - 1];
-
-            //----------------------------------------------------------------------------------------------------------------------------------
 
             Category newBookCategory = null;
             bool endCategoryBlock = true;
