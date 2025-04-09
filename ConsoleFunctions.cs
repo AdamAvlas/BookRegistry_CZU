@@ -15,19 +15,6 @@ namespace BookRegistry
             return "";
         }
 
-        public static bool UserInputCheck(string userInput, int minLength, int maxLength)
-        {
-            if (minLength > maxLength)
-            {
-                throw new Exception("Minimal length cannot be larger than the maximum length");
-            }
-            if (userInput.Length > minLength && userInput.Length < maxLength)
-            {
-                return true;
-            }
-            return false;
-        }//reduntant?
-
         public static int MenuInputCheck(string userInput)
         {
             if (userInput.Length == 0)
@@ -189,9 +176,6 @@ namespace BookRegistry
                 }
             }
             Console.WriteLine($"Author chosen: {newBookAuthor.GetFullName()}");
-            //Author newBookAuthor = databaseHandler.Authors[authorIDInteger - 1];
-
-            //----------------------------------------------------------------------------------------------------------------------------------
 
             Category newBookCategory = null;
             bool endCategoryBlock = true;
@@ -313,8 +297,6 @@ namespace BookRegistry
 
             Category newCategory = new(0, newCategoryName);
             databaseHandler.InsertNewCategory(newCategory);
-            //Author newAuthor = new(0, newAuthorName, newAuthorLastName, newAuthorBirthdate);
-            //databaseHandler.InsertNewAuthor(newAuthor);
         }
 
         public static void RemoveBook(DatabaseHandler databaseHandler)
