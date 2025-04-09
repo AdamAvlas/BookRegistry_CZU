@@ -31,6 +31,7 @@ namespace BookRegistry
             catch (Exception ex)
             {
                 Console.WriteLine($"Error while retrieving database connection details from configuration file: [{ex.Message}], please check the configuration file and try again");
+                ErrorLogger.LogError(ex);
                 Environment.Exit(2);
             }
 
@@ -106,6 +107,7 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                    ErrorLogger.LogError(ex);
                 }
 
                 SqlCommand insertBook = new("INSERT INTO books(title,category_id,author_id,date_added) VALUES(@Title, @CategoryID, @AuthorID, GETDATE())", sqlConnection);
@@ -127,6 +129,7 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while inserting record into database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                    ErrorLogger.LogError(ex);
                 }
             }
             Update();
@@ -144,6 +147,7 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                    ErrorLogger.LogError(ex);
                 }
                 string query = $"INSERT INTO authors(first_name,last_name,birthdate) VALUES('{newAuthor.Name}','{newAuthor.LastName}','{newAuthor.Birthdate.ToString("MM-dd-yyyy")}')";
                 SqlCommand insertBook = new(query, sqlConnection);
@@ -162,6 +166,7 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while inserting record into database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                    ErrorLogger.LogError(ex);
                 }
             }
             Update();
@@ -179,6 +184,7 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                    ErrorLogger.LogError(ex);
                 }
                 string query = $"INSERT INTO categories(category_name) VALUES('{newCategory.Name}')";
                 SqlCommand insertBook = new(query, sqlConnection);
@@ -197,6 +203,7 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while inserting record into database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                    ErrorLogger.LogError(ex);
                 }
             }
             Update();
@@ -213,6 +220,7 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                    ErrorLogger.LogError(ex);
                 }
 
                 SqlCommand insertBook = new("UPDATE books SET title = @Title, category_id = @CategoryID, author_id = @AuthorID WHERE book_id = @BookToEditID", sqlConnection);
@@ -238,6 +246,7 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while inserting record into database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                    ErrorLogger.LogError(ex);
                 }
             }
             Update();
@@ -254,6 +263,7 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
+                    ErrorLogger.LogError(ex);
                 }
                 string query = $"DELETE FROM books WHERE book_id = {bookToRemove.Id}";
                 SqlCommand insertBook = new(query, sqlConnection);
@@ -272,6 +282,7 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while removing record from database: {ex.Message}, please contact your administrator, or check the log file for more information");
+                    ErrorLogger.LogError(ex);
                 }
             }
             Update();
