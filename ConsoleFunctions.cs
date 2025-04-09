@@ -92,40 +92,8 @@ namespace BookRegistry
             }
             Console.WriteLine("----------------------------------------");
 
-            bool endBlock = false;
-            while (!endBlock)
-            {
-                Console.WriteLine("\n(1) Edit book\n(2) Remove book\n(3) Return to main menu");
-                Console.Write("Your choice: ");
-                string consoleCommand = Console.ReadLine();
-                int consoleCommandInt = MenuInputCheck(consoleCommand);
-
-                if (consoleCommandInt == 0)
-                {
-                    continue;
-                }
-
-                switch (consoleCommandInt)
-                {
-                    case 1:
-                        Console.WriteLine("You have chosen option 1");
-                        break;
-
-                    case 2:
-                        Console.WriteLine("You have chosen option 2");
-                        break;
-
-                    case 3:
-                        Console.WriteLine("Exiting...");
-                        endBlock = true;
-                        break;
-
-                    default:
-                        Console.WriteLine("Neplatná/neexistující volba!");
-                        break;
-
-                }
-            }
+            Console.WriteLine("To return to the main menu, press any key");
+            Console.ReadLine();
         }
 
         public static void CreateNewBook(DatabaseHandler databaseHandler)
