@@ -6,15 +6,9 @@ using System.Threading.Tasks;
 
 namespace BookRegistry.Classes
 {
-    public class Category
+    public class Category(int id, string name)
     {
-        public Category(int id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
-
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public int Id { get; set; } = id;
+        public string Name { get; set; } = name;
     }
 }
