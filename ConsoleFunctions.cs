@@ -7,13 +7,15 @@ namespace BookRegistry
     {
         public static string UserInputCheck(string userInput)
         {
+            int maxLength = 40;
             string regexPattern = @"[^a-zA-Z0-9!""()?.,$#@%:ěščřžýáíéúůďťňĚŠČŘŽÝÁÍÉŮÚĎŤŇ]";
             userInput = userInput.Trim();
             userInput = Regex.Replace(userInput, regexPattern, String.Empty);
-            if (userInput.Length > 0 && userInput.Length < 30)
+            if (userInput.Length > 0 && userInput.Length < maxLength)
             {
                 return userInput;
             }
+            Console.WriteLine($"Your title was either too long, or to short. Must be at most {maxLength} characters long (yours was {userInput.Length} long)");
             return "";
         }
 
@@ -105,7 +107,7 @@ namespace BookRegistry
             {
                 Console.Write("Enter title: ");
                 newBookTitle = UserInputCheck(Console.ReadLine());
-                if (UserInputCheck(newBookTitle).Length > 0)
+                if (newBookTitle.Length > 0)
                 {
                     break;
                 }
@@ -214,7 +216,7 @@ namespace BookRegistry
             {
                 Console.Write("Enter first name: ");
                 newAuthorName = UserInputCheck(Console.ReadLine());
-                if (UserInputCheck(newAuthorName).Length > 0)
+                if (newAuthorName.Length > 0)
                 {
                     break;
                 }
@@ -224,7 +226,7 @@ namespace BookRegistry
             {
                 Console.Write("Enter last name: ");
                 newAuthorLastName = UserInputCheck(Console.ReadLine());
-                if (UserInputCheck(newAuthorName).Length > 0)
+                if (newAuthorName.Length > 0)
                 {
                     break;
                 }
@@ -260,7 +262,7 @@ namespace BookRegistry
             {
                 Console.Write("Enter category name/title: ");
                 newCategoryName = UserInputCheck(Console.ReadLine());
-                if (UserInputCheck(newCategoryName).Length > 0)
+                if (newCategoryName.Length > 0)
                 {
                     break;
                 }
@@ -358,7 +360,7 @@ namespace BookRegistry
             {
                 Console.Write("Enter new title name: ");
                 newBookTitle = UserInputCheck(Console.ReadLine());
-                if (UserInputCheck(newBookTitle).Length > 0)
+                if (newBookTitle.Length > 0)
                 {
                     break;
                 }
