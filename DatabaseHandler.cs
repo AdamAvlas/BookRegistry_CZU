@@ -111,9 +111,11 @@ namespace BookRegistry
                 }
 
                 SqlCommand insertBook = new("INSERT INTO books(title,category_id,author_id,date_added) VALUES(@Title, @CategoryID, @AuthorID, GETDATE())", sqlConnection);
-                insertBook.Parameters.Add(new SqlParameter("Title", newBook.Title));
-                insertBook.Parameters.Add(new SqlParameter("CategoryID", newBook.Category.Id));
-                insertBook.Parameters.Add(new SqlParameter("AuthorID", newBook.Author.Id));
+                insertBook.Parameters.AddRange([
+                    new SqlParameter("Title", newBook.Title),
+                    new SqlParameter("CategoryID", newBook.Category.Id),
+                    new SqlParameter("AuthorID", newBook.Author.Id)
+                ]);
 
                 try
                 {
@@ -149,12 +151,17 @@ namespace BookRegistry
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
                     ErrorLogger.LogError(ex);
                 }
-                string query = $"INSERT INTO authors(first_name,last_name,birthdate) VALUES('{newAuthor.Name}','{newAuthor.LastName}','{newAuthor.Birthdate.ToString("MM-dd-yyyy")}')";
-                SqlCommand insertBook = new(query, sqlConnection);
+
+                SqlCommand insertAuthor = new("INSERT INTO authors(first_name,last_name,birthdate) VALUES(@Name,@LastName,@Birthdate)", sqlConnection);
+                insertAuthor.Parameters.AddRange([
+                    new SqlParameter("@Name", newAuthor.Name),
+                    new SqlParameter("@LastName", newAuthor.LastName),
+                    new SqlParameter("@Birthdate", newAuthor.Birthdate)
+                ]);
 
                 try
                 {
-                    if (insertBook.ExecuteNonQuery() > 0)
+                    if (insertAuthor.ExecuteNonQuery() > 0)
                     {
                         Console.WriteLine($"Succesfully created new author {newAuthor.GetFullName()}!");
                     }
@@ -186,12 +193,13 @@ namespace BookRegistry
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
                     ErrorLogger.LogError(ex);
                 }
-                string query = $"INSERT INTO categories(category_name) VALUES('{newCategory.Name}')";
-                SqlCommand insertBook = new(query, sqlConnection);
+   
+                SqlCommand insertCategory = new("INSERT INTO categories(category_name) VALUES(@CategoryName)", sqlConnection);
+                insertCategory.Parameters.Add(new SqlParameter("@CategoryName", newCategory.Name));
 
                 try
                 {
-                    if (insertBook.ExecuteNonQuery() > 0)
+                    if (insertCategory.ExecuteNonQuery() > 0)
                     {
                         Console.WriteLine($"Succesfully created new category {newCategory.Name}!");
                     }
@@ -265,8 +273,9 @@ namespace BookRegistry
                     Console.WriteLine($"Error while connection to database: {ex.Message}, please check the configuration file and try again");
                     ErrorLogger.LogError(ex);
                 }
-                string query = $"DELETE FROM books WHERE book_id = {bookToRemove.Id}";
-                SqlCommand insertBook = new(query, sqlConnection);
+
+                SqlCommand insertBook = new("DELETE FROM books WHERE book_id = @ID", sqlConnection);
+                insertBook.Parameters.Add(new SqlParameter("@ID", bookToRemove.Id));
 
                 try
                 {
