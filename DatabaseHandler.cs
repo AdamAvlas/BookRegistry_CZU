@@ -43,6 +43,7 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while connection to database: [{ex.Message}], please check the configuration file and try again");
+                    ErrorLogger.LogError(ex);
                     Environment.Exit(1);
                 }
 
@@ -81,6 +82,8 @@ namespace BookRegistry
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error while fetching data from database: {ex}, please contact your administrator, or check the log file for more information");
+                    ErrorLogger.LogError(ex);
+                    Console.ReadLine();
                 }
 
                 sqlConnection.Close();
