@@ -12,7 +12,7 @@ namespace BookRegistry
     {
         public static void LogError(Exception exception)
         {
-            Error testError = new(exception.Message, exception.Source, DateTime.Now);
+            Error testError = new(exception.Message, exception.StackTrace, exception.Source, DateTime.Now);
 
             string output = JsonSerializer.Serialize(testError);
 
@@ -25,23 +25,6 @@ namespace BookRegistry
                 Directory.CreateDirectory(logDirectoryPath);
             }
 
-            int noFiles = Directory.GetFiles(logDirectoryPath).Length;
-            if ((noFiles == 3 && !File.Exists(logFilePath)) || (noFiles > 3))
-            {
-                Dictionary<string, DateTime> filesDict = [];
-
-                foreach (string file in Directory.GetFiles(logDirectoryPath))
-                {
-                    filesDict.Add(file, File.GetLastWriteTime(file));
-                }
-                var filesDictSorted = filesDict.OrderByDescending(pair => pair.Value);
-                foreach (KeyValuePair<string,DateTime> item in filesDictSorted)
-                {
-                    Console.WriteLine($"key: {item.Key} - value: {item.Value}");
-                }
-
-                Console.WriteLine("Oldest file?: " + filesDictSorted.ElementAt(0).Key);
-            }
 
             Console.WriteLine($"Logging error to: {logFilePath}");
 
@@ -49,19 +32,31 @@ namespace BookRegistry
             {
                 streamWriter.WriteLine(output);
             }
+
+            int noFiles = Directory.GetFiles(logDirectoryPath).Length;
+            if (noFiles > 3)
+            {
+                Dictionary<string, DateTime> filesDict = [];
+
+                foreach (string file in Directory.GetFiles(logDirectoryPath))
+                {
+                    filesDict.Add(file, File.GetLastWriteTime(file));
+                }
+                var filesDictSorted = filesDict.OrderBy(pair => pair.Value);
+
+                for (int i = 0; i < (noFiles-3); i++)
+                {
+                    File.Delete(filesDictSorted.ElementAt(i).Key);
+                }
+            }
         }
     }
 
-    public class Error
+    public class Error(string message, string stackTrace, string source, DateTime timeStamp)
     {
-        public Error(string message, string source, DateTime timeStamp) 
-        {
-            Message = message;
-            Source = source;
-            Timestamp = timeStamp;
-        }
-        public string Message { get; set; }
-        public String Source { get; set; }
-        public DateTime Timestamp { get; set; }
+        public string Message { get; set; } = message;
+        public string StackTrace { get; set; } = stackTrace;
+        public String Source { get; set; } = source;
+        public DateTime Timestamp { get; set; } = timeStamp;
     }
 }
