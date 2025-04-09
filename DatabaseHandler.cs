@@ -96,7 +96,7 @@ namespace BookRegistry
             Initialize();
         }
 
-        public void InsertNewBook(Book newBook)//since all three methods are similar, maybe merge into one with a few input params?
+        public void InsertNewBook(Book newBook)
         {
             using (SqlConnection sqlConnection = new(connectionString))
             {
@@ -260,7 +260,7 @@ namespace BookRegistry
             Update();
         }
 
-        public void DeleteBook(Book bookToRemove)//change to int-id?
+        public void DeleteBook(Book bookToRemove)
         {
             using (SqlConnection sqlConnection = new(connectionString))
             {
