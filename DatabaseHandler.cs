@@ -16,7 +16,7 @@ public class DatabaseHandler
     public List<Author> Authors = [];
     public List<Category> Categories = [];
 
-    private string connectionString;
+    private string connectionString = String.Empty;
 
     public void Initialize()
     {
@@ -26,7 +26,7 @@ public class DatabaseHandler
 
         try
         {
-            connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+            connectionString = ConfigurationManager.AppSettings["ConnectionString"]!;
         }
         catch (Exception ex)
         {
@@ -57,26 +57,26 @@ public class DatabaseHandler
                 SqlDataReader reader = selectAuthorsCommand.ExecuteReader();
                 while (reader.Read())
                 {
-                    Author newAuthor = new(int.Parse(reader["author_id"].ToString()), reader["first_name"].ToString(), reader["last_name"].ToString(), DateOnly.FromDateTime((DateTime)reader["birthdate"]));
+                    Author newAuthor = new(int.Parse(reader["author_id"].ToString()!), reader["first_name"].ToString()!, reader["last_name"].ToString()!, DateOnly.FromDateTime((DateTime)reader["birthdate"]));
                     Authors.Add(newAuthor);
                 }
                 reader.Close();
                 reader = selectCategoriesCommand.ExecuteReader();
                 while (reader.Read())
                 {
-                    Category newCategory = new(int.Parse(reader["category_id"].ToString()), reader["category_name"].ToString());
+                    Category newCategory = new(int.Parse(reader["category_id"].ToString()!), reader["category_name"].ToString()!);
                     Categories.Add(newCategory);
                 }
                 reader.Close();
                 reader = selectBooksCommand.ExecuteReader();
                 while (reader.Read())
                 {
-                    int authorId = int.Parse(reader["author_id"].ToString());
-                    int categoryId = int.Parse(reader["category_id"].ToString());
-                    Category bookCategory = Categories.Find(cat => cat.Id == categoryId);
-                    Author bookAuthor = Authors.Find(auth => auth.Id == authorId);
+                    int authorId = int.Parse(reader["author_id"].ToString()!);
+                    int categoryId = int.Parse(reader["category_id"].ToString()!);
+                    Category bookCategory = Categories.Find(cat => cat.Id == categoryId)!;
+                    Author bookAuthor = Authors.Find(auth => auth.Id == authorId)!;
 
-                    Book newBook = new(int.Parse(reader["book_id"].ToString()), reader["title"].ToString(), bookCategory, bookAuthor);
+                    Book newBook = new(int.Parse(reader["book_id"].ToString()!), reader["title"].ToString()!, bookCategory, bookAuthor);
                     Books.Add(newBook);
                 }
             }
