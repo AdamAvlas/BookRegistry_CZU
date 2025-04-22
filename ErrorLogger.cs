@@ -12,9 +12,19 @@ namespace BookRegistry
     {
         public static void LogError(Exception exception)
         {
-            Error testError = new(exception.Message, exception.StackTrace, exception.Source, DateTime.Now);
+            string stackTrace = "Error stack trace could not be found/parsed correctly";
+            string errorSource = "Error source could not be found/parsed correctly";
+            if (exception.StackTrace is not null)
+            {
+                stackTrace = exception.StackTrace.ToString();
+            }
+            if (exception.Source is not null)
+            {
+                errorSource = exception.Source.ToString();
+            }
+            Error error = new(exception.Message, stackTrace, errorSource, DateTime.Now);
 
-            string output = JsonSerializer.Serialize(testError);
+            string output = JsonSerializer.Serialize(error);
 
             string fileName = $"log.{DateTime.Today.ToString("dd_MM_yyyy")}.json";
             string logDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "logs");
@@ -24,7 +34,6 @@ namespace BookRegistry
             {
                 Directory.CreateDirectory(logDirectoryPath);
             }
-
 
             Console.WriteLine($"Logging error to: {logFilePath}");
 
@@ -45,7 +54,7 @@ namespace BookRegistry
                 }
                 var filesDictSorted = filesDict.OrderBy(pair => pair.Value);
 
-                for (int i = 0; i < (noFiles-maxKeptLogFiles); i++)
+                for (int i = 0; i < (noFiles - maxKeptLogFiles); i++)
                 {
                     File.Delete(filesDictSorted.ElementAt(i).Key);
                 }
