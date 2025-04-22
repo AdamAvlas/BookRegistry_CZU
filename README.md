@@ -44,3 +44,4 @@ ErrorLogger
         Umožňuje zpětnou analýzu problémů bez nutnosti interaktivního debugování.
 
 Databáze:
+Databáze v projektu se skládá ze tří hlavních tabulek: Books, Authors a Categories. Tabulka Books obsahuje základní informace o knize jako název, ID autora a kategorie. Authors uchovává seznam autorů včetně jména a příjmení, zatímco Categories slouží k rozřazení knih dle žánrů nebo typu. Vztahy mezi tabulkami jsou definovány pomocí cizích klíčů (pouze vztahy typu 1:N) – každá kniha odkazuje na jednoho autora a jednu kategorii.
