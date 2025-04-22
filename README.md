@@ -45,3 +45,14 @@ ErrorLogger
 
 Databáze:
 Databáze v projektu se skládá ze tří hlavních tabulek: Books, Authors a Categories. Tabulka Books obsahuje základní informace o knize jako název, ID autora a kategorie. Authors uchovává seznam autorů včetně jména a příjmení, zatímco Categories slouží k rozřazení knih dle žánrů nebo typu. Vztahy mezi tabulkami jsou definovány pomocí cizích klíčů (pouze vztahy typu 1:N) – každá kniha odkazuje na jednoho autora a jednu kategorii.
+
+Jak spustit:
+Ke spuštění aplikace je krom klonování tohoto repository potřeba samotný databázový soubor a konfigurační soubor, které jsou ke stažení zde{https://drive.google.com/file/d/1kTt1kD1nARhzn6zA48QuOOBLoelP58V8/view?usp=sharing}. Prvním krokem je přidání databáze jako zdroje dat ve Visual Studiu
+1) Data Connections->Add Connection
+![Snímek obrazovky 2025-04-22 191825](https://github.com/user-attachments/assets/940e62a6-a12e-4e1f-93cd-f8a2dae73348)
+
+2) Najít databázový .mdf soubor a přidat ho
+3) Zkopírovat ConnectionString databáze do konfiguračního souboru
+![Snímek obrazovky 2025-04-22 192250](https://github.com/user-attachments/assets/d5400042-2fff-41c0-b423-5c92330a3189)
+
+![Snímek obrazovky 2025-04-22 192349](https://github.com/user-attachments/assets/1bc57278-9e47-44a2-825b-681a80ab1149)
