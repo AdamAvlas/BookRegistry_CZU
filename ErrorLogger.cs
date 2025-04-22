@@ -34,7 +34,8 @@ namespace BookRegistry
             }
 
             int noFiles = Directory.GetFiles(logDirectoryPath).Length;
-            if (noFiles > 3)
+            const int maxKeptLogFiles = 3;
+            if (noFiles > maxKeptLogFiles)
             {
                 Dictionary<string, DateTime> filesDict = [];
 
@@ -44,7 +45,7 @@ namespace BookRegistry
                 }
                 var filesDictSorted = filesDict.OrderBy(pair => pair.Value);
 
-                for (int i = 0; i < (noFiles-3); i++)
+                for (int i = 0; i < (noFiles-maxKeptLogFiles); i++)
                 {
                     File.Delete(filesDictSorted.ElementAt(i).Key);
                 }
