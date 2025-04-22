@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace BookRegistry;
 
-public static class ErrorLogger
+public static class ErrorLogger//class for logging more complex errors to an external file
 {
     public static void LogError(Exception exception)
     {
@@ -44,7 +38,7 @@ public static class ErrorLogger
 
         int noFiles = Directory.GetFiles(logDirectoryPath).Length;
         const int maxKeptLogFiles = 3;
-        if (noFiles > maxKeptLogFiles)
+        if (noFiles > maxKeptLogFiles)//deletes older log-files so that only 3 newest are kept
         {
             Dictionary<string, DateTime> filesDict = [];
 
@@ -62,7 +56,7 @@ public static class ErrorLogger
     }
 }
 
-public class Error(string message, string stackTrace, string source, DateTime timeStamp)
+public class Error(string message, string stackTrace, string source, DateTime timeStamp)//a simple object representing a single error to be serialized
 {
     public string Message { get; set; } = message;
     public string StackTrace { get; set; } = stackTrace;

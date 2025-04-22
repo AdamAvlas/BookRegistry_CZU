@@ -1,16 +1,14 @@
-﻿using System.Configuration;
-using BookRegistry.Classes;
+﻿namespace BookRegistry;
 
-namespace BookRegistry
+internal class Program
 {
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            DatabaseHandler databaseHandler = new();
-            databaseHandler.Initialize();
+        //creation and inicialization of a new DBHandler object
+        DatabaseHandler databaseHandler = new();
+        databaseHandler.Initialize();
 
-            ConsoleFunctions.MainMenu(databaseHandler);
-        }
+        //where the program is actually started from
+        ConsoleFunctions.MainMenu(databaseHandler);
     }
 }

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace BookRegistry;
 
-public static class ConsoleFunctions
+public static class ConsoleFunctions//the main function handling communication with user, static, does not need to be initialized
 {
     private static string UserInputCheck(string userInput)
     {
@@ -22,7 +22,7 @@ public static class ConsoleFunctions
         }
         Console.WriteLine($"Your title was either too long, or to short. Must be at most {maxLength} characters long (yours was {userInput.Length} long)");
         return "";
-    }
+    }//method for checking the user input
 
     private static int MenuInputCheck(string userInput)
     {
@@ -41,7 +41,7 @@ public static class ConsoleFunctions
         }
 
         return userInputInteger;
-    }
+    }//method for checking the user input, when chosing an option in a menu
 
     public static void MainMenu(DatabaseHandler databaseHandler)
     {
@@ -87,7 +87,7 @@ public static class ConsoleFunctions
                     break;
             }
         }
-    }
+    }//the main/default method called directly after the program is started, and to which it returns after most succesful operatinos
 
     private static void ViewAll(DatabaseHandler databaseHandler)
     {
@@ -101,9 +101,9 @@ public static class ConsoleFunctions
 
         Console.WriteLine("To return to the main menu, press any key");
         Console.ReadLine();
-    }
+    }//READ method, displays all existing books
 
-    private static void CreateNewBook(DatabaseHandler databaseHandler)
+    private static void CreateNewBook(DatabaseHandler databaseHandler)//CREATE method, for creating new books
     {
         Console.Clear();
         Console.WriteLine("Creating new book:");
@@ -119,6 +119,7 @@ public static class ConsoleFunctions
         }
         Console.WriteLine($"Chosen title: {newBookTitle}");
 
+        //either choosing an author, or creating another one
         Author? newBookAuthor = null;
         bool endAuthorBlock = true;
         while (endAuthorBlock)
@@ -213,7 +214,7 @@ public static class ConsoleFunctions
         }
     }
 
-    private static void CreateNewAuthor(DatabaseHandler databaseHandler)
+    private static void CreateNewAuthor(DatabaseHandler databaseHandler)//CREATE method, for creating a new author(only ever called from CreateNewBook and UpdateBook, not directly from MM)
     {
         Console.WriteLine("Creating new author:");
         string newAuthorName;
@@ -246,7 +247,7 @@ public static class ConsoleFunctions
             {
                 try
                 {
-                    newAuthorBirthdate = DateOnly.ParseExact(newAuthorBirthdateString, ["dd-mm-yyyy", "dd.mm.yyyy", "dd mm yyyy"]);
+                    newAuthorBirthdate = DateOnly.ParseExact(newAuthorBirthdateString, ["dd-mm-yyyy", "dd.mm.yyyy", "dd mm yyyy"]);//just to be safe, 3 different possible formats
                     break;
                 }
                 catch (Exception ex)
@@ -259,7 +260,7 @@ public static class ConsoleFunctions
         databaseHandler.InsertNewAuthor(newAuthor);
     }
 
-    private static void CreateNewCategory(DatabaseHandler databaseHandler)
+    private static void CreateNewCategory(DatabaseHandler databaseHandler)//CREATE method, for creating a new category(only ever called from CreateNewBook and UpdateBook, not directly from MM)
     {
         Console.WriteLine("Creating new category:");
         string newCategoryName;
@@ -277,7 +278,7 @@ public static class ConsoleFunctions
         databaseHandler.InsertNewCategory(newCategory);
     }
 
-    private static void RemoveBook(DatabaseHandler databaseHandler)
+    private static void RemoveBook(DatabaseHandler databaseHandler)//DELETE method, for removing existing books, parses whole object to DBHandler
     {
         Console.Clear();
         Console.WriteLine("Removing a book:");
@@ -464,5 +465,5 @@ public static class ConsoleFunctions
                 break;
             }
         }
-    }
+    }//UPDATE method, for modifying existing books
 }

@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 using BookRegistry.Classes;
 using Microsoft.Data.SqlClient;
 
 namespace BookRegistry;
 
-public class DatabaseHandler
+public class DatabaseHandler//a mainly back-end method, handling the communication with the SQL database
 {
     public List<Book> Books = [];
     public List<Author> Authors = [];
@@ -18,7 +12,7 @@ public class DatabaseHandler
 
     private string connectionString = String.Empty;
 
-    public void Initialize()
+    public void Initialize()//method thats called on program startup, loading the data into it
     {
         Books = [];
         Authors = [];
@@ -26,7 +20,7 @@ public class DatabaseHandler
 
         try
         {
-            connectionString = ConfigurationManager.AppSettings["ConnectionString"]!;
+            connectionString = ConfigurationManager.AppSettings["ConnectionString"]!;//getting the DB connection 
         }
         catch (Exception ex)
         {
@@ -48,6 +42,7 @@ public class DatabaseHandler
                 Environment.Exit(1);
             }
 
+            //reading the data from the database
             SqlCommand selectAuthorsCommand = new("SELECT TOP(100) author_id, first_name, last_name, birthdate FROM authors", sqlConnection);
             SqlCommand selectCategoriesCommand = new("SELECT TOP(100) category_id, category_name FROM categories", sqlConnection);
             SqlCommand selectBooksCommand = new("SELECT TOP(100) book_id, title, category_id, author_id FROM books", sqlConnection);
@@ -91,7 +86,7 @@ public class DatabaseHandler
         }
     }
 
-    public void Update()
+    public void Update()//method thats called after every db operation so that the program has up-to-date data
     {
         Initialize();
     }
