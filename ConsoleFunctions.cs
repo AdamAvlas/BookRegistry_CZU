@@ -46,7 +46,7 @@ public static class ConsoleFunctions//TO-DO: make non-static + rename maybe?
             Console.Clear();
             Console.WriteLine("(1) View All\n(2) Create New\n(3) Edit existing\n(4) Remove existing\n(5) Exit program");
             Console.Write("Your choice: ");
-            string consoleCommand = Console.ReadLine();
+            string consoleCommand = Console.ReadLine()!;
             int consoleCommandInt = MenuInputCheck(consoleCommand);
 
             if (consoleCommandInt == 0)
