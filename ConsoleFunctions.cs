@@ -7,7 +7,12 @@ namespace BookRegistry
     {
         private static string UserInputCheck(string userInput)
         {
-            int maxLength = 40;
+            const int maxLength = 40;
+            if (userInput == null)
+            {
+                Console.WriteLine($"Your title was empty!");
+                return "";
+            }
             string regexPattern = @"[^a-zA-Z0-9!""()?.,$#@%:ěščřžýáíéúůďťňĚŠČŘŽÝÁÍÉŮÚĎŤŇ ]";
             userInput = userInput.Trim();
             userInput = Regex.Replace(userInput, regexPattern, String.Empty);
@@ -21,7 +26,7 @@ namespace BookRegistry
 
         private static int MenuInputCheck(string userInput)
         {
-            if (userInput.Length == 0)
+            if (userInput == null || userInput.Length == 0)
             {
                 Console.WriteLine("Cannot enter NOTHING!");
                 Console.ReadLine();
@@ -283,7 +288,7 @@ namespace BookRegistry
             }
 
             int bookToRemoveID = 0;
-            Book bookToRemove;
+            Book? bookToRemove;
             while (true)
             {
                 Console.Write("Choose book to remove: ");
