@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace BookRegistry.Classes;
 
-namespace BookRegistry.Classes;
-
-public class Book(int id, string title, Category category, Author author)
+public class Book(int id, string title, Category category, Author author)//a class representing a single book
 {
     public int Id { get; set; } = id;
     public string Title { get; set; } = title;
