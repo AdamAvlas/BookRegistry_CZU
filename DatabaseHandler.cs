@@ -20,7 +20,8 @@ public class DatabaseHandler//a mainly back-end method, handling the communicati
 
         try
         {
-            connectionString = ConfigurationManager.AppSettings["ConnectionString"]!;//getting the DB connection 
+            connectionString = ConfigurationManager.AppSettings["ConnectionString"]!;//getting the DB connection string
+            SqlConnectionStringBuilder connectionStringBuilder = new(connectionString);//validating the connection string
         }
         catch (Exception ex)
         {
