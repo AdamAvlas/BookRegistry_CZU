@@ -8,8 +8,9 @@ BookRegistry_CZU je konzolová CRUD (Create, Read, Update, Delete) aplikace urč
 Spuštění programu zajišťuje třída Program: v metodě Main se vytvoří a inicializuje instance DatabaseHandler a poté se předá do metody ConsoleFunctions.MainMenu, odkud uživatel ovládá celou aplikaci. Všechny interakce s uživatelem probíhají v této statické třídě, která nabízí přehledné menu s volbami pro různé operace nad záznamy knih.
 
 3. Zpracování chyb a logování: 
-Při každé chybě, například nevalidním vstupu nebo výjimce při práci s databází, je zavolána třída ErrorLogger. Ta zapíše podrobnosti o chybě do logovacího souboru, aby bylo možné později snadno dohledat, co se pokazilo. Díky tomu je aplikace robustnější a přehlednější pro další ladění. Zachovává pouze 3 nejnovější log soubory, zbylé smaže.
-Popis hlavních tříd
+Při každé chybě, například nevalidním vstupu nebo výjimce při práci s databází, je zavolána třída ErrorLogger. Ta zapíše podrobnosti o chybě do logovacího souboru, aby bylo možné později snadno dohledat, co se pokazilo. Díky tomu je aplikace robustnější a přehlednější pro další ladění. Zachovává pouze 3 nejnovější log soubory, zbylé smaže. Logy jsou generovány do složky /bin/Debug/net9.0/logs. Pro spuštění není třeba nic nastavovat, ani samotnou složku manuálně vytvářet.
+
+Popis hlavních tříd:
 
 Program
 
